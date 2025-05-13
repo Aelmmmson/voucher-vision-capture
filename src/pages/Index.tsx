@@ -97,9 +97,11 @@ const Index = () => {
       const response = await api.scanVoucher();
       // Convert the nation field to narration in our state
       setVoucherData({
-        ...response,
+        voucherNo: response.voucherNo,
         narration: response.nation || "",
-        nation: undefined
+        micr: response.micr,
+        frontImage: response.frontImage,
+        backImage: response.backImage
       });
       toast({
         title: "Scan Complete",
