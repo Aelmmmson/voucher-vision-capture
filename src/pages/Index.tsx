@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useToast } from "@/components/ui/use-toast";
 import DeviceStatus from '@/components/DeviceStatus';
@@ -6,15 +5,16 @@ import SidebarButton from '@/components/SidebarButton';
 import InfoField from '@/components/InfoField';
 import ImageDisplay from '@/components/ImageDisplay';
 import { api } from '@/services/api';
-
 const Index = () => {
-  const { toast } = useToast();
-  
+  const {
+    toast
+  } = useToast();
+
   // Application state
   const [isDeviceConnected, setIsDeviceConnected] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [currentAction, setCurrentAction] = useState<string>("");
-  
+
   // Voucher data
   const [voucherData, setVoucherData] = useState({
     voucherNo: "",
@@ -34,7 +34,6 @@ const Index = () => {
     const interval = setInterval(checkDeviceStatus, 10000); // Check every 10 seconds
     return () => clearInterval(interval);
   }, []);
-
   const checkDeviceStatus = async () => {
     try {
       const response = await api.getDeviceStatus();
@@ -44,32 +43,29 @@ const Index = () => {
       console.error("Error checking device status:", error);
     }
   };
-
   const handleConnect = async () => {
     setIsLoading(true);
     setCurrentAction("Connecting to device...");
-    
     try {
       const response = await api.connectDevice();
-      
       if (response.success) {
         setIsDeviceConnected(true);
         toast({
           title: "Device Connected",
-          description: "Successfully connected to the scanner device.",
+          description: "Successfully connected to the scanner device."
         });
       } else {
         toast({
           title: "Connection Failed",
           description: "Failed to connect to the scanner device.",
-          variant: "destructive",
+          variant: "destructive"
         });
       }
     } catch (error) {
       toast({
         title: "Connection Error",
         description: "An error occurred while connecting to the device.",
-        variant: "destructive",
+        variant: "destructive"
       });
       console.error("Error connecting to device:", error);
     } finally {
@@ -77,33 +73,29 @@ const Index = () => {
       setCurrentAction("");
     }
   };
-
   const handleScanVoucher = async () => {
     if (!isDeviceConnected) {
       toast({
         title: "Device Not Connected",
         description: "Please connect the device before scanning.",
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
-
     setIsLoading(true);
     setCurrentAction("Scanning voucher...");
-    
     try {
       const response = await api.scanVoucher();
       setVoucherData(response);
-      
       toast({
         title: "Scan Complete",
-        description: `Voucher ${response.voucherNo} scanned successfully.`,
+        description: `Voucher ${response.voucherNo} scanned successfully.`
       });
     } catch (error) {
       toast({
         title: "Scan Error",
         description: "An error occurred while scanning the voucher.",
-        variant: "destructive",
+        variant: "destructive"
       });
       console.error("Error scanning voucher:", error);
     } finally {
@@ -111,40 +103,36 @@ const Index = () => {
       setCurrentAction("");
     }
   };
-
   const handleSaveToDb = async () => {
     if (!voucherData.voucherNo) {
       toast({
         title: "No Data",
         description: "Please scan a voucher before saving.",
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
-
     setIsLoading(true);
     setCurrentAction("Saving to database...");
-    
     try {
       const response = await api.saveToDatabase(voucherData);
-      
       if (response.success) {
         toast({
           title: "Data Saved",
-          description: `Voucher ${voucherData.voucherNo} saved to database.`,
+          description: `Voucher ${voucherData.voucherNo} saved to database.`
         });
       } else {
         toast({
           title: "Save Failed",
           description: "Failed to save voucher data to database.",
-          variant: "destructive",
+          variant: "destructive"
         });
       }
     } catch (error) {
       toast({
         title: "Save Error",
         description: "An error occurred while saving to the database.",
-        variant: "destructive",
+        variant: "destructive"
       });
       console.error("Error saving to database:", error);
     } finally {
@@ -152,16 +140,13 @@ const Index = () => {
       setCurrentAction("");
     }
   };
-
   const handleExit = () => {
     // Simple reload for now, in a real app this might do cleanup first
     window.location.reload();
   };
-
-  return (
-    <div className="min-h-screen flex flex-col bg-scanner-background">
+  return <div className="min-h-screen flex flex-col bg-scanner-background">
       {/* Header */}
-      <header className="bg-scanner-primary text-white p-4 shadow-md">
+      <header className="bg-scanner-primary text-white p-2 shadow-md">
         <h1 className="text-2xl font-bold">X100+ Voucher Scanner</h1>
       </header>
 
@@ -174,34 +159,21 @@ const Index = () => {
           </div>
           
           <div className="flex flex-col flex-1 space-y-2">
-            <SidebarButton 
-              onClick={handleConnect} 
-              disabled={isLoading}
-              className={isDeviceConnected ? "bg-scanner-connected/10 hover:bg-scanner-connected/20" : ""}
-            >
+            <SidebarButton onClick={handleConnect} disabled={isLoading} className={isDeviceConnected ? "bg-scanner-connected/10 hover:bg-scanner-connected/20" : ""}>
               Connect
             </SidebarButton>
             
-            <SidebarButton 
-              onClick={handleScanVoucher} 
-              disabled={!isDeviceConnected || isLoading}
-            >
+            <SidebarButton onClick={handleScanVoucher} disabled={!isDeviceConnected || isLoading}>
               Scan Voucher
             </SidebarButton>
             
-            <SidebarButton 
-              onClick={handleSaveToDb} 
-              disabled={!voucherData.voucherNo || isLoading}
-            >
+            <SidebarButton onClick={handleSaveToDb} disabled={!voucherData.voucherNo || isLoading}>
               Save to DB
             </SidebarButton>
             
             <div className="flex-1"></div>
             
-            <SidebarButton 
-              onClick={handleExit} 
-              className="bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 mt-auto"
-            >
+            <SidebarButton onClick={handleExit} className="bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 mt-auto">
               Exit
             </SidebarButton>
           </div>
@@ -209,49 +181,30 @@ const Index = () => {
 
         {/* Main content area */}
         <main className="flex-1 p-6 overflow-y-auto">
-          {isLoading && (
-            <div className="mb-4 p-2 bg-blue-50 text-blue-700 rounded">
+          {isLoading && <div className="mb-4 p-2 bg-blue-50 text-blue-700 rounded">
               {currentAction}
-            </div>
-          )}
+            </div>}
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Left column - Info fields */}
             <div>
-              <InfoField 
-                label="Voucher No." 
-                value={voucherData.voucherNo || ""} 
-              />
-              <InfoField 
-                label="Nation" 
-                value={voucherData.nation || ""} 
-              />
+              <InfoField label="Voucher No." value={voucherData.voucherNo || ""} />
+              <InfoField label="Nation" value={voucherData.nation || ""} />
             </div>
 
             {/* Right column - Hidden MICR data */}
             <div className="hidden">
-              <InfoField 
-                label="MICR Data" 
-                value={voucherData.micr || ""} 
-              />
+              <InfoField label="MICR Data" value={voucherData.micr || ""} />
             </div>
           </div>
 
           {/* Image displays */}
           <div className="grid md:grid-cols-2 gap-6 mt-4">
-            <ImageDisplay 
-              label="Front" 
-              imageData={voucherData.frontImage} 
-            />
-            <ImageDisplay 
-              label="Back" 
-              imageData={voucherData.backImage} 
-            />
+            <ImageDisplay label="Front" imageData={voucherData.frontImage} />
+            <ImageDisplay label="Back" imageData={voucherData.backImage} />
           </div>
         </main>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
