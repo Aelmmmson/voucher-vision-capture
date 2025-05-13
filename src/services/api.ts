@@ -4,7 +4,7 @@
 // Mock data for development
 const MOCK_VOUCHER_RESPONSE = {
   voucherNo: "V12345678",
-  nation: "USA",
+  narration: "Payment for services", // Changed from nation to narration
   micr: "123456789012345",
   frontImage: null, // Would be a base64 string in real implementation
   backImage: null,  // Would be a base64 string in real implementation

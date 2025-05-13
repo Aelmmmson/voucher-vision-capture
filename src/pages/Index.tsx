@@ -19,7 +19,7 @@ const Index = () => {
   // Voucher data
   const [voucherData, setVoucherData] = useState({
     voucherNo: "",
-    narration: "", // Changed from nation to narration
+    narration: "",
     micr: "",
     frontImage: null as string | null,
     backImage: null as string | null
@@ -95,10 +95,9 @@ const Index = () => {
     setCurrentAction("Scanning voucher...");
     try {
       const response = await api.scanVoucher();
-      // Convert the nation field to narration in our state
       setVoucherData({
         voucherNo: response.voucherNo,
-        narration: response.nation || "",
+        narration: response.narration || "",
         micr: response.micr,
         frontImage: response.frontImage,
         backImage: response.backImage
