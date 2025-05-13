@@ -153,7 +153,7 @@ const Index = () => {
       {/* Main content */}
       <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-60 bg-white border-r border-scanner-lightgray p-4 flex flex-col">
+        <aside className="w-52 bg-white border-r border-scanner-lightgray p-4 flex flex-col">
           <div className="mb-6">
             <DeviceStatus connected={isDeviceConnected} />
           </div>
