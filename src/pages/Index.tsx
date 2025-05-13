@@ -147,7 +147,7 @@ const Index = () => {
   return <div className="min-h-screen flex flex-col bg-scanner-background">
       {/* Header */}
       <header className="bg-scanner-primary text-white p-2 shadow-md">
-        <h1 className="text-2xl font-bold">X100+ Voucher Scanner</h1>
+        <h1 className="text-2xl font-bold px-4">X100+ Voucher Scanner</h1>
       </header>
 
       {/* Main content */}
