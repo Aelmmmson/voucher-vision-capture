@@ -5,6 +5,7 @@ import SidebarButton from '@/components/SidebarButton';
 import InfoField from '@/components/InfoField';
 import ImageDisplay from '@/components/ImageDisplay';
 import { api } from '@/services/api';
+
 const Index = () => {
   const {
     toast
@@ -18,11 +19,19 @@ const Index = () => {
   // Voucher data
   const [voucherData, setVoucherData] = useState({
     voucherNo: "",
-    nation: "",
+    narration: "", // Changed from nation to narration
     micr: "",
     frontImage: null as string | null,
     backImage: null as string | null
   });
+
+  // Handle narration change
+  const handleNarrationChange = (value: string) => {
+    setVoucherData(prev => ({
+      ...prev,
+      narration: value
+    }));
+  };
 
   // Check device status on component mount
   useEffect(() => {
@@ -86,7 +95,12 @@ const Index = () => {
     setCurrentAction("Scanning voucher...");
     try {
       const response = await api.scanVoucher();
-      setVoucherData(response);
+      // Convert the nation field to narration in our state
+      setVoucherData({
+        ...response,
+        narration: response.nation || "",
+        nation: undefined
+      });
       toast({
         title: "Scan Complete",
         description: `Voucher ${response.voucherNo} scanned successfully.`
@@ -185,17 +199,26 @@ const Index = () => {
               {currentAction}
             </div>}
 
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Left column - Info fields */}
-            <div>
-              <InfoField label="Voucher No." value={voucherData.voucherNo || ""} />
-              <InfoField label="Nation" value={voucherData.nation || ""} />
-            </div>
+          {/* Form fields in a horizontal layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <InfoField 
+              label="Voucher No." 
+              value={voucherData.voucherNo || ""} 
+              readOnly={true}
+            />
+            <InfoField 
+              label="Narration" 
+              value={voucherData.narration || ""} 
+              readOnly={false}
+              onChange={handleNarrationChange}
+              required={false}
+              placeholder="Enter narration (optional)"
+            />
+          </div>
 
-            {/* Right column - Hidden MICR data */}
-            <div className="hidden">
-              <InfoField label="MICR Data" value={voucherData.micr || ""} />
-            </div>
+          {/* Hidden MICR data */}
+          <div className="hidden">
+            <InfoField label="MICR Data" value={voucherData.micr || ""} />
           </div>
 
           {/* Image displays */}
@@ -207,4 +230,5 @@ const Index = () => {
       </div>
     </div>;
 };
+
 export default Index;
